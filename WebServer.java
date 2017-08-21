@@ -14,7 +14,6 @@ public static void main (String args[])
 
                 while(true) {
                         Socket clientSocket = listenSocket.accept();
-                        //Connection c = new Connection(clientSocket);
                         InputStream input = clientSocket.getInputStream();
                         BufferedReader br = new BufferedReader(new InputStreamReader(input));
 
@@ -43,8 +42,7 @@ public static void loadPage(Socket clientSocket, String filePath, BufferedReader
                         System.out.println("File does not exist.  Client requesting file at : " + filePath);
                         output.close();
                 }
-                //FileReader fr = new FileReader(file);
-                //  BufferedReader brFile = new BufferedReader(fr);
+
                 else {
                         output.write("HTTP/1.1 200 OK\r\n" + "Content-Type: text/html" + "\r\n\r\n");
                         byte[] fileBytes = Files.readAllBytes(Paths.get(filePath));
