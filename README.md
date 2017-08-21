@@ -1,8 +1,8 @@
-#Simple HTTP Server
+# Simple HTTP Server
 
 HTTP Server implemented in Java.  Processes 'GET' requests from client (e.g. a Browser), and serves the corresponding webpage if the requested file is present in the current directory.  Server runs localhost:6880.  Optimized for Chrome and Firefox browsers.
 
-#Usage Example
+# Usage Example
 
 Compile java file by changing into the relevant directory and entering the following command in your terminal:
 ```
