@@ -38,7 +38,7 @@ public static void loadPage(Socket clientSocket, String filePath, BufferedReader
                 PrintWriter output = new PrintWriter(clientSocket.getOutputStream());
                 File file = new File(filePath);
                 if (!file.exists()) {
-                        output.write("HTTP/1.1 404 Not Found\r\n");
+                    output.write("HTTP/1.1 404 Not Found\r\n" + "Content-Type: text/html" + "\r\n\r\n");
                         System.out.println("File does not exist.  Client requesting file at : " + filePath);
                         output.close();
                 }
