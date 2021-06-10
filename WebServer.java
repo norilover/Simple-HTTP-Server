@@ -14,17 +14,24 @@ public static void main (String args[])
 
                 while(true) {
                         Socket clientSocket = listenSocket.accept();
-                        InputStream input = clientSocket.getInputStream();
-                        BufferedReader br = new BufferedReader(new InputStreamReader(input));
 
-                        String request = br.readLine();
-                        String[] reqArray = request.split(" "); // ['GET', 'index.html', 'HTTP/1.1']
+                        trInputStream input = clientSocket.getInputStream();
 
-                        String filePath = reqArray[1].substring(1); // index.html (or other path): remove the '/'
-                        //System.out.println("request[0]: " + request[0] + " request[1]: " + request[1] + " nextline: " + nextLine);
-                        if (filePath!=null)
-                                loadPage(clientSocket, filePath, br);
-                        //break;
+                        try(BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(input));){
+
+                            String request = bufferedReader.readLine();
+
+                            // ['GET', 'index.html', 'HTTP/1.1']
+                            String[] reqArray = request.split(" ");
+
+                            // index.html (or other path): remove the '/'
+                            String filePath = reqArray[1].substring(1);
+                            //System.out.println("request[0]: " + request[0] + " request[1]: " + request[1] + " nextline: " + nextLine);
+
+                            if(filePath != null){
+                                loadPage(clientSocket, filePath);
+                            }
+                        }
                 }
         }
         catch(IOException e) {
@@ -32,15 +39,13 @@ public static void main (String args[])
         }
 }
 
-public static void loadPage(Socket clientSocket, String filePath, BufferedReader br) {
-        try {
-
-                PrintWriter output = new PrintWriter(clientSocket.getOutputStream());
+public static void loadPage(Socket clientSocket, String filePath) {
+        try(PrintWriter output = new PrintWriter(clientSocket.getOutputStream());) {
+                
                 File file = new File(filePath);
                 if (!file.exists()) {
                     output.write("HTTP/1.1 404 Not Found\r\n" + "Content-Type: text/html" + "\r\n\r\n");
                         System.out.println("File does not exist.  Client requesting file at : " + filePath);
-                        output.close();
                 }
 
                 else {
@@ -50,13 +55,7 @@ public static void loadPage(Socket clientSocket, String filePath, BufferedReader
                         output.write(fileString);
 
                         System.out.println("Finished writing content to output");
-                        //brFile.close();
-                        //br.close();
-                        output.close();
-
                 }
-
-
         }
         catch(IOException e) {
                 System.out.println("Connection: " + e.getMessage());
